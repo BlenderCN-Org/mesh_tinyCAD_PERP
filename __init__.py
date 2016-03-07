@@ -57,15 +57,17 @@ def perp_make():
 
 class TCPerpEdge(bpy.types.Operator):
     bl_idname = "tinycad.perp_edge"
-    bl_label = "PERP | Perpendicular Edge"
+    bl_label = "PERP | Perpendicular Edge creation"
     bl_description = "Extends an edge from active vertex to perpendicular of 2 selected vertices"
     bl_options = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
+        if not (tuple(context.tool_settings.mesh_select_mode[:]) == (True, False, False)):
+            return
+        
+        # is edit mode, is vertex select mode only. 
         ob = context.active_object
-        # tool_settings.mesh_select_mode == 1, 0, 0
-        print(dir(context.tool_settings))
         return all([bool(ob), ob.type == 'MESH', ob.mode == 'EDIT'])
 
     def execute(self, context):
